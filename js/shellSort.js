@@ -1,7 +1,7 @@
 var shellSort = async function shellSort(uArr){
 
     let bars = document.getElementsByClassName("bar");
-    console.log("Initial arr ", uArr);
+    let translate = direction === "vertical" ? "X" : "Y";
 
     async function sort(arr){
         let len = arr.length;
@@ -18,22 +18,31 @@ var shellSort = async function shellSort(uArr){
                     
                     arr[j] = arr[j - gap];
 
-                    bars[j].style.transform = `translateX(${17 * -(gap)}px)`;
+                    bars[j].style.transform = `translate${translate + "(" + (thickness + 0.3)/2 * -(gap)}vw)`;
                     bars[j].style.backgroundColor = randRGB;
 
-                    bars[j - gap].style.transform = `translateX(${17 * (gap)}px)`;
+                    bars[j - gap].style.transform = `translate${translate + "(" + (thickness + 0.3)/2 * (gap)}vw)`;
                     bars[j - gap].style.backgroundColor = randRGB;
                     
-                    await sleep(ANIMATION_LENGTH/2);
+                    await sleep(ANIMATION_LENGTH/16);
+                    await sleep(ANIMATION_LENGTH/4);
 
-                    bars[j].style.height = arr[j] * 10 + "px";
-                    bars[j - gap].style.height = temp * 10 + "px";
+                    if (direction === "vertical"){
+                        bars[j].style.height = arr[j] + "vw";
+                    } else {
+                        bars[j].style.width = arr[j] * 2 + "vw";
+                    }
+                    if (direction === "vertical"){
+                        bars[j - gap].style.height = temp + "vw";
+                    } else {
+                        bars[j - gap].style.width = temp * 2 + "vw";
+                    }
 
                     await sleep(ANIMATION_LENGTH/16);
                     await sleep(ANIMATION_LENGTH/8);
 
-                    bars[j].style.transform = `translateX(0)`;
-                    bars[j - gap].style.transform = `translateX(0)`;
+                    bars[j].style.transform = `translate${translate}(0)`;
+                    bars[j - gap].style.transform = `translate${translate}(0)`;
 
                     await sleep(ANIMATION_LENGTH);
                 }

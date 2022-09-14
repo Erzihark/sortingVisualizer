@@ -1,37 +1,46 @@
 *{
-    padding: 0;
-    margin: 0;
     box-sizing: border-box;
 }
 
 .container{
-    max-width: 100vw;
-    height: 100vh;
+    height: 90vh;
     width: 90%;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
-    padding: 20px 0;
+    justify-content: center;
 }
 
 #bars-container{
     display: flex;
-    flex: row;
+    height: 40%;
 }
 
 .bar{
-    width: 30px;
     border: 1px solid black;
-    margin: 0 2px;
+    margin: 0 0.3vw;
     transition: all 0.5s ease-in-out;
+    align-self: end;
 }
 
 .bottom-bar{
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    padding: 2vw 1vw;
+    border: 2px solid black;
+    width: 100%;
+}
+
+#sorting-method-label{
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 2vw 1vw;
 }
 
 #buttons-container{

@@ -1,6 +1,7 @@
 var quickSort = async function quickSort(arr){
 
     let bars = document.getElementsByClassName("bar");
+    let translate = direction === "vertical" ? "X" : "Y";
 
     async function partition(arr, l, r){
         let mid = Math.floor((l + r)/2)
@@ -26,20 +27,26 @@ var quickSort = async function quickSort(arr){
                 arr[r] = arr[l];
 
                 bars[r].style.backgroundColor = randRGB;
-                bars[l].style.transform = `translateX(${(17 * (r - l))}px)`;
+                bars[l].style.transform = `translate${translate + "(" + ((thickness + 0.3)/2 * (r - l))}vw)`;
 
                 arr[l] = temp;
                 
                 bars[l].style.backgroundColor = randRGB;
-                bars[r].style.transform = `translateX(${(17 * -(r - l))}px)`;
+                bars[r].style.transform = `translate${translate + "(" + ((thickness + 0.3)/2 * -(r - l))}vw)`;
                 
                 await sleep(ANIMATION_LENGTH/2);
-
-                bars[l].style.height = arr[l] * 10 + "px";
-                bars[l].style.transform = `translateX(0)`;
-
-                bars[r].style.height = arr[r] * 10 + "px";
-                bars[r].style.transform = `translateX(0)`;
+                if (direction === "vertical"){
+                    bars[l].style.height = arr[l] + "vw";
+                } else {
+                    bars[l].style.width = arr[l] * 2 + "vw";
+                }
+                bars[l].style.transform = `translate${translate}(0)`;
+                if (direction === "vertical"){
+                    bars[r].style.height = arr[r] + "vw";
+                } else {
+                    bars[r].style.width = arr[r] * 2 + "vw";
+                }
+                bars[r].style.transform = `translate${translate}(0)`;
 
                 await sleep(ANIMATION_LENGTH);
 
