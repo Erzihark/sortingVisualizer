@@ -1,4 +1,10 @@
-let ANIMATION_LENGTH = 1000;
+var direction = "vertical";
+var thickness = 4;
+var multiplier = 0.5;
+var ANIMATION_LENGTH = 1000;
+var screenWidth = 0;
+var resizeTimeout;
+var mobileWidth = 640;
 
 let randomizeArray = document.getElementById("array-randomizer");
 
@@ -6,6 +12,8 @@ let bubbleSortBtn = document.getElementById("bubble-sort-button");
 let quickSortBtn = document.getElementById("quick-sort-button");
 let mergeSortBtn = document.getElementById("merge-sort-button");
 let shellSortBtn = document.getElementById("shell-sort-button");
+
+let methodLabel = document.getElementById("sorting-method-label");
 
 let barsContainer = document.getElementById("bars-container")
 
@@ -19,7 +27,7 @@ const sliderProps = {
     '2':2,
     '3':5,
     '4':10,
-    '5': 100,
+    '5':100,
 }
 
 function randomNum(min, max){
@@ -32,19 +40,69 @@ function createRandomArray(){
     }
 }
 
+window.onresize = ()=>{   
+    if (screenWidth == 0){
+        screenWidth = document.documentElement.clientWidth;
+    }
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(()=>{
+        let currentWidth = document.documentElement.clientWidth;
+        let previousWidth = screenWidth;
+        let min = Math.min(previousWidth, currentWidth);
+        let max = Math.max(previousWidth, currentWidth);
+        if  (currentWidth == mobileWidth) return;
+        if (mobileWidth >= min && mobileWidth <= max){
+            swapBarDimensions();
+        }
+        screenWidth = 0;  
+    }, 300);
+}
+
 document.addEventListener("DOMContentLoaded", ()=>{
     createRandomArray();
     initializeSlider();
+    if (document.documentElement.clientWidth <= 640){
+        swapBarDimensions();
+    }
     renderBars(unsortedArray);
 });
+
+function swapBarDimensions(){
+    //row = vertical
+    let bars = document.getElementsByClassName("bar");
+
+    if (direction === "horizontal"){
+        direction = "vertical";
+        barsContainer.style.flexDirection = "row";
+    } else {
+        direction = "horizontal";
+        barsContainer.style.flexDirection = "column";
+    }
+
+    multiplier = direction === "horizontal" ? 2 : 0.5
+    
+    for (let i = 0; i < bars.length; i++){
+        let width = bars[i].style.width.match(/\d+/)[0];
+        let height = bars[i].style.height.match(/\d+/)[0];
+        bars[i].style.width = `${height * multiplier}vw`;
+        bars[i].style.height = `${width * multiplier}vw`;
+    }
+    
+}
 
 function renderBars(array){
     for(let i = 0; i < array.length; i++){
         let bar = document.createElement("div");
         bar.classList.add("bar");
-        bar.style.height = `${array[i] * 10}px`;
+        if (direction === "vertical"){
+            bar.style.height = `${array[i]}vw`;
+            bar.style.width = `${thickness}vw`;
+        } else {
+            bar.style.height = `${thickness}vw`;
+            bar.style.width = `${array[i] * 2}vw`;
+        }
         //bar.style.backgroundColor = `rgb(${randomNum(0, 255)}, ${randomNum(0, 255)}, ${randomNum(0, 255)})`;
-        bar.style.backgroundColor = "white"
+        bar.style.backgroundColor = "white";
         barsContainer.appendChild(bar);
     }
 }
@@ -102,30 +160,42 @@ function toggleButtons(){
     }
 }
 
+function toggleMethodLabel(method = ""){
+    methodLabel.innerHTML = method;
+}
+
 bubbleSortBtn.addEventListener("click", ()=>{
     toggleButtons();
+    toggleMethodLabel("Bubble sorting...");
     bubbleSort(unsortedArray).then(()=>{
         toggleButtons();
+        toggleMethodLabel();
     });
 })
 
 quickSortBtn.addEventListener("click", ()=>{
     toggleButtons();
+    toggleMethodLabel("Quick sorting...");
     quickSort(unsortedArray).then(()=>{
         toggleButtons();
+        toggleMethodLabel();
     });
 })
 
 mergeSortBtn.addEventListener("click", ()=>{
     toggleButtons();
+    toggleMethodLabel("Merge sorting...");
     mergeSort(unsortedArray).then(()=>{
         toggleButtons();
+        toggleMethodLabel();
     })
 })
 
 shellSortBtn.addEventListener("click", ()=>{
     toggleButtons();
+    toggleMethodLabel("Shell sorting...");
     shellSort(unsortedArray).then(()=>{
         toggleButtons();
+        toggleMethodLabel();
     })
 })
